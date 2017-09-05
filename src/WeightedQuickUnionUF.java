@@ -1,11 +1,12 @@
-public class QuickUnionUF {
+public class WeightedQuickUnionUF {
 
-    private int[] id;
+    private int[] id, size;
 
-    public QuickUnionUF(int N) {
+    public WeightedQuickUnionUF(int N) {
         id = new int[N];
         for (int i = 0; i < N; i++) {
             id[i] = i;
+            size[i] = 1;
         }
     }
 
@@ -16,11 +17,19 @@ public class QuickUnionUF {
     private void union(int p, int q) {
         int pRoot = findRoot(p);
         int qRoot = findRoot(q);
-        id[pRoot] = qRoot;
+        if (size[p] > size[q]) {
+            id[qRoot] = pRoot;
+            size[p] += size[q];
+        } else {
+            id[pRoot] = qRoot;
+            size[q] += size[p];
+        }
     }
 
     private int findRoot(int p) {
         if (id[p] != p) {
+            //adding path compression
+            id[p] = id[id[p]];
             return findRoot(id[p]);
         } else {
             return p;
@@ -28,6 +37,6 @@ public class QuickUnionUF {
     }
 
     public static void main(String[] args) {
-        QuickUnionUF quickUnionUF = new QuickUnionUF(Integer.parseInt(args[0]));
+        WeightedQuickUnionUF quickUnionUF = new WeightedQuickUnionUF(Integer.parseInt(args[0]));
     }
 }
