@@ -75,19 +75,11 @@ public class Percolation {
             neighbours[neighbourIndex++] = n * n + 1;
         }
 
-        if (row != 1) {
-            neighbours[neighbourIndex++] = calcCellIndex(row, col) - n;
-        }
-        if (row != n) {
-            neighbours[neighbourIndex++] = calcCellIndex(row, col) + n;
-        }
+        if (row != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - n;
+        if (row != n) neighbours[neighbourIndex++] = calcCellIndex(row, col) + n;
 
-        if (col != 1) {
-            neighbours[neighbourIndex] = calcCellIndex(row, col) - 1;
-        }
-        if (col != n) {
-            neighbours[neighbourIndex] = calcCellIndex(row, col) + 1;
-        }
+        if (col != 1) neighbours[neighbourIndex] = calcCellIndex(row, col) - 1;
+        if (col != n) neighbours[neighbourIndex] = calcCellIndex(row, col) + 1;
 
         return neighbours;
     }
