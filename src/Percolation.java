@@ -4,8 +4,7 @@ public class Percolation {
     private int[] grid;
 
     private int blocked = 0;
-    private int open = 1;
-    private int full = 2;
+    private int full = -1;
 
     public Percolation(int n) {
         if (n <= 0) {
@@ -16,7 +15,7 @@ public class Percolation {
         // n * n and n * n + 1 are indexes of top and bottom extra cells
         grid = new int[n * n + 2];
         grid[n * n] = full;
-        grid[n * n + 1] = open;
+        grid[n * n + 1] = n * n + 1;
     }
 
     private void checkArgs(int row, int col) {
@@ -34,31 +33,13 @@ public class Percolation {
         this.checkArgs(row, col);
         int cellIndex = calcCellIndex(row, col);
         if (grid[cellIndex] == blocked) {
-            grid[cellIndex] = open;
-            fillCellIfNeeded(row, col);
-            if (this.isFull(row, col)) {
-                fillCellsNeighbours(row, col);
-            }
+            //open and fill
+            //fill neighbours
         }
     }
 
     private void fillCellIfNeeded(int row, int col) {
-        int[] neighbours = getCellNeighbours(row, col);
-        for (int neighbourIndex: neighbours) {
-            if (grid[neighbourIndex] == full) {
-                grid[calcCellIndex(row, col)] = full;
-                return;
-            }
-        }
-    }
 
-    private void fillCellsNeighbours(int row, int col) {
-        int[] neighbours = getCellNeighbours(row, col);
-        for (int neighbourIndex: neighbours) {
-            if (grid[neighbourIndex] == open) {
-                grid[neighbourIndex] = full;
-            }
-        }
     }
 
     private int[] getCellNeighbours(int row, int col) {
@@ -84,23 +65,21 @@ public class Percolation {
         return neighbours;
     }
 
-    private boolean checkCell(int row, int col, int type) {
-        this.checkArgs(row, col);
-        return grid[(row - 1) * n + (col - 1)] == type;
-    }
-
     public boolean isOpen(int row, int col) {
-        return this.checkCell(row, col, open);
+        this.checkArgs(row, col);
+        return  grid[(row - 1) * n + (col - 1)] != blocked &&
+                grid[(row - 1) * n + (col - 1)] != full;
     }
 
     public boolean isFull(int row, int col) {
-        return this.checkCell(row, col, full);
+        this.checkArgs(row, col);
+        return grid[(row - 1) * n + (col - 1)] == full;
     }
 
     public int numberOfOpenSites() {
         int num = 0;
         for (int i = 0, max = n * n; i < max; i++) {
-            if (grid[i] == open) num++;
+            if (grid[i] != blocked) num++;
         }
         return num;
     }
