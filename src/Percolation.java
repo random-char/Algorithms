@@ -1,21 +1,23 @@
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
 public class Percolation {
 
     private int n;
-    private int[] grid;
+    private int numOpen = 0;
 
-    private int blocked = 0;
-    private int full = -1;
+    private boolean[] isOpenArray;
+    private WeightedQuickUnionUF weightedQuickUnionUF;
 
     public Percolation(int n) {
         if (n <= 0) {
             throw new java.lang.IllegalArgumentException();
         }
         this.n = n;
-        //0 to (n * n - 1) are indexes of the grid cells
-        // n * n and n * n + 1 are indexes of top and bottom extra cells
-        grid = new int[n * n + 2];
-        grid[n * n] = full;
-        grid[n * n + 1] = n * n + 1;
+
+        isOpenArray = new boolean[n * n + 2];
+        isOpenArray[0] = isOpenArray[n * n + 1] = true;
+
+        weightedQuickUnionUF = new WeightedQuickUnionUF(n * n + 2);
     }
 
     private void checkArgs(int row, int col) {
@@ -26,20 +28,21 @@ public class Percolation {
     }
 
     private int calcCellIndex(int row, int col) {
-        return (row - 1) * n + (col - 1);
+        return (row - 1) * n + col;
     }
 
     public void open(int row, int col) {
         this.checkArgs(row, col);
         int cellIndex = calcCellIndex(row, col);
-        if (grid[cellIndex] == blocked) {
-            //open and fill
-            //fill neighbours
+
+        if (isOpenArray[cellIndex]) return;
+
+        isOpenArray[cellIndex] = true;
+        numOpen++;
+        int[] neighbourIndexes = getCellNeighbours(row, col);
+        for (int neighbourIndex: neighbourIndexes) {
+            if (isOpenArray[neighbourIndex]) weightedQuickUnionUF.union(cellIndex, neighbourIndex);
         }
-    }
-
-    private void fillCellIfNeeded(int row, int col) {
-
     }
 
     private int[] getCellNeighbours(int row, int col) {
@@ -51,7 +54,7 @@ public class Percolation {
         int[] neighbours = new int[numNeighbours];
 
         if (row == 1) {
-            neighbours[neighbourIndex++] = n * n;
+            neighbours[neighbourIndex++] = 0;
         } else if (row == n) {
             neighbours[neighbourIndex++] = n * n + 1;
         }
@@ -59,7 +62,7 @@ public class Percolation {
         if (row != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - n;
         if (row != n) neighbours[neighbourIndex++] = calcCellIndex(row, col) + n;
 
-        if (col != 1) neighbours[neighbourIndex] = calcCellIndex(row, col) - 1;
+        if (col != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - 1;
         if (col != n) neighbours[neighbourIndex] = calcCellIndex(row, col) + 1;
 
         return neighbours;
@@ -67,29 +70,23 @@ public class Percolation {
 
     public boolean isOpen(int row, int col) {
         this.checkArgs(row, col);
-        return  grid[(row - 1) * n + (col - 1)] != blocked &&
-                grid[(row - 1) * n + (col - 1)] != full;
+        return isOpenArray[calcCellIndex(row, col)];
     }
 
     public boolean isFull(int row, int col) {
         this.checkArgs(row, col);
-        return grid[(row - 1) * n + (col - 1)] == full;
+        return weightedQuickUnionUF.connected(calcCellIndex(row, col), 0);
     }
 
     public int numberOfOpenSites() {
-        int num = 0;
-        for (int i = 0, max = n * n; i < max; i++) {
-            if (grid[i] != blocked) num++;
-        }
-        return num;
+        return numOpen;
     }
 
     public boolean percolates() {
-        return grid[n * n + 1] == full;
+        System.out.println("num open " + numOpen);
+        return weightedQuickUnionUF.connected(n * n + 1, 0);
     }
 
     public static void main(String[] args) {
-        int n = Integer.parseInt(args[0]);
-        Percolation percolation = new Percolation(n);
     }
 }
