@@ -3,7 +3,9 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
-    private int trials;
+    private final int trials;
+    private double mean;
+    private double stddev;
     private double[] fractions;
 
     public PercolationStats(int n, int trials) {
@@ -15,22 +17,20 @@ public class PercolationStats {
     }
 
     public double mean() {
-        return StdStats.mean(this.fractions);
+        mean = StdStats.mean(this.fractions);
+        return mean;
     }
 
     public double stddev() {
-        return StdStats.stddev(this.fractions);
+        stddev = StdStats.stddev(this.fractions);
+        return stddev;
     }
 
     public double confidenceLo() {
-        double mean = this.mean();
-        double stddev = this.stddev();
         return mean - (1.96 * stddev) / Math.sqrt(this.trials);
     }
 
     public double confidenceHi() {
-        double mean = this.mean();
-        double stddev = this.stddev();
         return mean + (1.96 * stddev) / Math.sqrt(this.trials);
     }
 

@@ -2,22 +2,25 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 
-    private int n;
+    private final int n;
+    private final int lastIndex;
     private int numOpen = 0;
 
     private boolean[] isOpenArray;
-    private WeightedQuickUnionUF weightedQuickUnionUF;
+    private final WeightedQuickUnionUF weightedQuickUnionUF;
 
     public Percolation(int n) {
         if (n <= 0) {
             throw new java.lang.IllegalArgumentException();
         }
         this.n = n;
+        this.lastIndex = n * n + 1;
 
-        isOpenArray = new boolean[n * n + 2];
-        isOpenArray[0] = isOpenArray[n * n + 1] = true;
+        isOpenArray = new boolean[lastIndex + 1];
+        isOpenArray[0] = true;
+        isOpenArray[lastIndex] = true;
 
-        weightedQuickUnionUF = new WeightedQuickUnionUF(n * n + 2);
+        weightedQuickUnionUF = new WeightedQuickUnionUF(lastIndex + 1);
     }
 
     private void checkArgs(int row, int col) {
@@ -83,9 +86,6 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return weightedQuickUnionUF.connected(n * n + 1, 0);
-    }
-
-    public static void main(String[] args) {
+        return weightedQuickUnionUF.connected(lastIndex, 0);
     }
 }
