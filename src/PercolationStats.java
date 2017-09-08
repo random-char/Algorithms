@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
 
+    private final int n;
     private final int trials;
     private double mean;
     private double stddev;
@@ -12,6 +13,7 @@ public class PercolationStats {
         if (!(n > 0 && trials > 0)) {
             throw new java.lang.IllegalArgumentException();
         }
+        this.n = n;
         this.trials = trials;
         this.fractions = new double[trials];
     }
@@ -34,8 +36,7 @@ public class PercolationStats {
         return mean + (1.96 * stddev) / Math.sqrt(this.trials);
     }
 
-    private double newTestPercolation(int n) {
-        Percolation percolation = new Percolation(n);
+    private double testPercolation(Percolation percolation) {
         while (!percolation.percolates()) {
             int row, col;
             do {
@@ -54,7 +55,7 @@ public class PercolationStats {
         PercolationStats percolationStats = new PercolationStats(n, trials);
 
         for (int i = 0; i < trials; i++) {
-            percolationStats.fractions[i] = percolationStats.newTestPercolation(n);
+            percolationStats.fractions[i] = percolationStats.testPercolation(new Percolation(n));
         }
 
         System.out.println("mean                    = " + percolationStats.mean());

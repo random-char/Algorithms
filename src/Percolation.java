@@ -44,7 +44,11 @@ public class Percolation {
         numOpen++;
         int[] neighbourIndexes = getCellNeighbours(row, col);
         for (int neighbourIndex: neighbourIndexes) {
-            if (isOpenArray[neighbourIndex]) weightedQuickUnionUF.union(cellIndex, neighbourIndex);
+            if (neighbourIndex == lastIndex) {
+                if (weightedQuickUnionUF.connected(cellIndex, 0)) weightedQuickUnionUF.union(cellIndex, neighbourIndex);
+            } else if (isOpenArray[neighbourIndex]) {
+                weightedQuickUnionUF.union(cellIndex, neighbourIndex);
+            }
         }
     }
 
@@ -58,8 +62,9 @@ public class Percolation {
 
         if (row == 1) {
             neighbours[neighbourIndex++] = 0;
-        } else if (row == n) {
-            neighbours[neighbourIndex++] = n * n + 1;
+        }
+        if (row == n) {
+            neighbours[neighbourIndex++] = lastIndex;
         }
 
         if (row != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - n;
