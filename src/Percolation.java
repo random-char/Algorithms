@@ -83,7 +83,6 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        System.out.println("num open " + numOpen);
         return weightedQuickUnionUF.connected(n * n + 1, 0);
     }
 
