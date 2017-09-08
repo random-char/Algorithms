@@ -60,18 +60,14 @@ public class Percolation {
 
         int[] neighbours = new int[numNeighbours];
 
-        if (row == 1) {
-            neighbours[neighbourIndex++] = 0;
-        }
-        if (row == n) {
-            neighbours[neighbourIndex++] = lastIndex;
-        }
-
         if (row != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - n;
         if (row != n) neighbours[neighbourIndex++] = calcCellIndex(row, col) + n;
 
         if (col != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - 1;
-        if (col != n) neighbours[neighbourIndex] = calcCellIndex(row, col) + 1;
+        if (col != n) neighbours[neighbourIndex++] = calcCellIndex(row, col) + 1;
+
+        if (row == 1) neighbours[neighbourIndex++] = 0;
+        if (row == n) neighbours[neighbourIndex] = lastIndex;
 
         return neighbours;
     }
