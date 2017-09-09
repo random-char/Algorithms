@@ -44,21 +44,21 @@ public class Percolation {
         numOpen++;
         int[] neighbourIndexes = getCellNeighbours(row, col);
         for (int neighbourIndex: neighbourIndexes) {
-            if (neighbourIndex == lastIndex) {
-                if (weightedQuickUnionUF.connected(cellIndex, 0)) weightedQuickUnionUF.union(cellIndex, neighbourIndex);
-            } else if (isOpenArray[neighbourIndex]) {
+            if (isOpenArray[neighbourIndex]) {
                 weightedQuickUnionUF.union(cellIndex, neighbourIndex);
             }
         }
     }
 
     private int[] getCellNeighbours(int row, int col) {
-        int numNeighbours = 4;
         int neighbourIndex = 0;
 
-        if (col == 1 || col == n) numNeighbours--;
-
-        int[] neighbours = new int[numNeighbours];
+        int[] neighbours;
+        if (col == 1 || col == n) {
+            neighbours = new int[3];
+        } else {
+            neighbours = new int[4];
+        }
 
         if (row != 1) neighbours[neighbourIndex++] = calcCellIndex(row, col) - n;
         if (row != n) neighbours[neighbourIndex++] = calcCellIndex(row, col) + n;
