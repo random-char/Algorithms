@@ -5,9 +5,8 @@ public class PercolationStats {
 
     private final int n;
     private final int trials;
-    private double mean;
-    private double stddev;
-    private double[] fractions;
+    private final double mean;
+    private final double stddev;
 
     public PercolationStats(int n, int trials) {
         if (!(n > 0 && trials > 0)) {
@@ -15,16 +14,21 @@ public class PercolationStats {
         }
         this.n = n;
         this.trials = trials;
-        this.fractions = new double[trials];
+        double[] fractions = new double[trials];
+
+        for (int i = 0; i < trials; i++) {
+            fractions[i] = this.testPercolation(new Percolation(n));
+        }
+
+        mean = StdStats.mean(fractions);
+        stddev = StdStats.stddev(fractions);
     }
 
     public double mean() {
-        mean = StdStats.mean(this.fractions);
         return mean;
     }
 
     public double stddev() {
-        stddev = StdStats.stddev(this.fractions);
         return stddev;
     }
 
@@ -53,10 +57,6 @@ public class PercolationStats {
         int trials = Integer.parseInt(args[1]);
 
         PercolationStats percolationStats = new PercolationStats(n, trials);
-
-        for (int i = 0; i < trials; i++) {
-            percolationStats.fractions[i] = percolationStats.testPercolation(new Percolation(n));
-        }
 
         System.out.println("mean                    = " + percolationStats.mean());
         System.out.println("stddev                  = " + percolationStats.stddev());
