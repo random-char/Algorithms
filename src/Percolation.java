@@ -9,6 +9,8 @@ public class Percolation {
 
     private int[] checkLastRowCellColumns = new int[] {-1};
 
+    private boolean percolates = false;
+
     private boolean[] isOpenArray;
     private final WeightedQuickUnionUF weightedQuickUnionUF;
 
@@ -52,7 +54,7 @@ public class Percolation {
             }
         }
 
-        if (checkLastRowCellColumns[0] != -1) {
+        if (!percolates && checkLastRowCellColumns[0] != -1) {
             for (int i = 0; i < checkLastRowCellColumns.length; i++) {
                 if (isFull(n, checkLastRowCellColumns[i])) {
                     weightedQuickUnionUF.union(calcCellIndex(n, checkLastRowCellColumns[i]), lastIndex);
@@ -75,7 +77,7 @@ public class Percolation {
             numNeighbours--;
         }
         if (row == n) {
-            addToArray(col);
+            if (!percolates) addToArray(col);
             numNeighbours--;
         }
 
@@ -134,6 +136,10 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return weightedQuickUnionUF.connected(lastIndex, 0);
+        if (!percolates && weightedQuickUnionUF.connected(lastIndex, 0)) {
+            percolates = true;
+            checkLastRowCellColumns = null;
+        }
+        return percolates;
     }
 }
