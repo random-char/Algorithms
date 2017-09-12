@@ -2,12 +2,13 @@ import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
 
-    private int size;
+    private int size = 0;
     private Node first, last;
 
     private class Node {
         Item item;
         Node next;
+        Node prev;
     }
 
 
@@ -42,6 +43,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         Node oldFirst = first;
         Node newFirst = new Node();
+        oldFirst.prev = newFirst;
         newFirst.item = item;
         newFirst.next = oldFirst;
         first = newFirst;
@@ -59,6 +61,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         Node newLast = new Node();
         newLast.item = item;
+        newLast.prev = last;
         last.next = newLast;
         last = newLast;
     }
@@ -81,6 +84,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         Item firstItem = first.item;
         first = first.next;
+        first.prev = null;
         return firstItem;
     }
 
@@ -94,18 +98,18 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         Item lastItem = last.item;
-        last = null;
+        last = last.prev;
+        last.next = null;
         return lastItem;
     }
 
     public Iterator<Item> iterator() {
         return new Iterator<Item>() {
-            private Node current;
+            private Node current = first;
 
             public boolean hasNext() {
-                return current.next != null;
+                return current != null;
             }
-
 
             public Item next() {
                 if (!hasNext()) throw new java.util.NoSuchElementException();
