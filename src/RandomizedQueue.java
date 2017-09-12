@@ -13,6 +13,33 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Node prev;
     }
 
+    private class RandomizedQueueIterator implements Iterator<Item> {
+        private int orderIndex = 0;
+        private int[] order = new int[size];
+
+        public RandomizedQueueIterator() {
+            for (int i = 0; i < size; i++) {
+                order[i] = i;
+            }
+            for (int i = 0; i < size; i++) {
+                int changeBy = StdRandom.uniform(size);
+                int aux = order[i];
+                order[i] = order[changeBy];
+                order[changeBy] = aux;
+            }
+        }
+
+        public boolean hasNext() {
+            return orderIndex < size;
+        }
+
+
+        public Item next() {
+            if (!hasNext()) throw new java.util.NoSuchElementException();
+            return sample(order[orderIndex++]);
+        }
+    }
+
     public RandomizedQueue() {
 
     }
@@ -61,12 +88,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             first = null;
             last = null;
         } else  if (element == first) {
-            Node nextElement = element.next;
-            first = nextElement;
+            first = element.next;
             first.prev = null;
-        } else if (element == last){
-            Node prevElement = element.prev;
-            last = prevElement;
+        } else if (element == last) {
+            last = element.prev;
             last.next = null;
         } else {
             Node prevElement = element.prev;
@@ -81,30 +106,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item sample() {
         if (size == 0) throw new java.util.NoSuchElementException();
         int elementIndex = StdRandom.uniform(size);
+        return sample(elementIndex);
+    }
+
+    private Item sample(int index) {
         Node element = first;
-        for (int i = 0; i < elementIndex; i++) {
+        for (int i = 0; i < index; i++) {
             element = element.next;
         }
         return element.item;
     }
 
     public Iterator<Item> iterator() {
-        return new Iterator<Item>() {
-            private Node current = first;
-
-            public boolean hasNext() {
-                return current != null;
-            }
-
-
-            public Item next() {
-                if (!hasNext()) throw new java.util.NoSuchElementException();
-
-                Item item = current.item;
-                current = current.next;
-                return item;
-            }
-        };
+        return new RandomizedQueueIterator();
     }
 
     public static void main(String[] args) {

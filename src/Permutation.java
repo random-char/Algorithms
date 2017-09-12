@@ -5,8 +5,8 @@ public class Permutation {
         int k = Integer.parseInt(args[0]);
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
 
-        for (String s: StdIn.readString().split(" ")) {
-            randomizedQueue.enqueue(s);
+        while (!StdIn.isEmpty()) {
+            randomizedQueue.enqueue(StdIn.readString());
         }
 
         for (int i = 0; i < k; i++) {
