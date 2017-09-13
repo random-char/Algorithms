@@ -21,8 +21,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             for (int i = 0; i < size; i++) {
                 order[i] = i;
             }
-            for (int i = 0; i < size; i++) {
-                int changeBy = StdRandom.uniform(size);
+            for (int i = size - 1; i >= 0; i--) {
+                int changeBy = StdRandom.uniform(i + 1);
                 int aux = order[i];
                 order[i] = order[changeBy];
                 order[changeBy] = aux;
@@ -57,18 +57,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         size++;
 
-        if (size == 1) {
-            Node element = new Node();
-            element.item = item;
-            first = element;
-            last = element;
-            return;
-        }
-
         Node newLast = new Node();
         newLast.item = item;
-        newLast.prev = last;
-        last.next = newLast;
+
+        if (size == 1) {
+            first = newLast;
+        } else {
+            newLast.prev = last;
+            last.next = newLast;
+        }
+
         last = newLast;
     }
 
