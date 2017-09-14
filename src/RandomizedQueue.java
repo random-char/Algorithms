@@ -18,10 +18,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private int[] order = new int[size];
 
         public RandomizedQueueIterator() {
-            for (int i = 0; i < size; i++) {
+            if (size > 0) order[0] = 0;
+            for (int i = 1; i < size; i++) {
                 order[i] = i;
-            }
-            for (int i = size - 1; i >= 0; i--) {
                 int changeBy = StdRandom.uniform(i + 1);
                 int aux = order[i];
                 order[i] = order[changeBy];
