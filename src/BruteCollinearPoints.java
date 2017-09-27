@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class BruteCollinearPoints {
 
-    private Point[] points;
+    private final Point[] points;
     private LineSegment[] lineSegmentsArray;
     private int segmentIndex = 0;
 
@@ -13,9 +13,14 @@ public class BruteCollinearPoints {
         if (points == null) {
             throw new IllegalArgumentException();
         }
+        for (int i = 0; i < points.length; i++) {
+            if (points[i] == null) {
+                throw new IllegalArgumentException();
+            }
+        }
         Insertion.sort(points);
         for (int i = 0; i < points.length - 1; i++) {
-            if (points[i] == null || points[i].compareTo(points[i + 1]) == 0) {
+            if (points[i].compareTo(points[i + 1]) == 0) {
                 throw new IllegalArgumentException();
             }
         }
@@ -47,14 +52,14 @@ public class BruteCollinearPoints {
                 for (int k = 0; k < points.length; k++) {
                     if (k == i || k == j) continue;
                     if (Double.compare(points[k].slopeTo(points[j]), points[k].slopeTo(points[i])) != 0) continue;
-                    for (int l = 0; l < points.length; l++) {
-                        if (l == i || l == j || l == k) continue;
-                        if (Double.compare(points[l].slopeTo(points[k]), points[k].slopeTo(points[j])) == 0) {
+                    for (int y = 0; y < points.length; y++) {
+                        if (y == i || y == j || y == k) continue;
+                        if (Double.compare(points[y].slopeTo(points[k]), points[k].slopeTo(points[j])) == 0) {
                             Point[] fourCollinearPoints = {
                                     points[i],
                                     points[j],
                                     points[k],
-                                    points[l]
+                                    points[y]
                             };
                             Insertion.sort(fourCollinearPoints);
                             LineSegment newLineSegment = new LineSegment(fourCollinearPoints[0], fourCollinearPoints[3]);
@@ -62,7 +67,6 @@ public class BruteCollinearPoints {
                                 if (segmentIndex == lineSegmentsArray.length) increaseLineSegmentsArray();
                                 lineSegmentsArray[segmentIndex++] = newLineSegment;
                             }
-
                         }
                     }
                 }
@@ -83,7 +87,7 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("input10.txt");
+        In in = new In("equidistant.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {

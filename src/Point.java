@@ -62,8 +62,8 @@ public class Point implements Comparable<Point> {
     }
 
     public static void main(String[] args) {
-        Point p1 = new Point(0,0);
-        Point p2 = new Point(1,1);
+        Point p1 = new Point(0, 0);
+        Point p2 = new Point(1, 1);
 
         System.out.println(p1.compareTo(p2));
     }
